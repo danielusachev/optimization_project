@@ -42,3 +42,6 @@ macx: LIBS += -L$$PWD/../prog/ortools/lib/ -lortools
 
 INCLUDEPATH += $$PWD/../prog/ortools/include
 DEPENDPATH += $$PWD/../prog/ortools/include
+
+DISTFILES += \
+    report.txt

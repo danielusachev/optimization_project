@@ -1,6 +1,9 @@
 #ifndef GOOGLESOLVER_H
 #define GOOGLESOLVER_H
+#define USE_CBC
 #define USE_GLOP
+#define USE_CLP
+#define USE_GLPK
 #include "ortools/base/commandlineflags.h"
 #include "ortools/base/commandlineflags.h"
 #include "ortools/base/logging.h"
@@ -15,7 +18,8 @@ class googlesolver
 public:
     googlesolver();
     double Solve(const vector<vector<ValueType>> &A, const vector<ValueType> &B,
-               const vector<ValueType> &C, int N, vector<ValueType> &answers);
+               const vector<ValueType> &C, const vector<int> &I, int N, vector<ValueType> &answers,
+                 string solverName, bool isInt, int64 &time, int iterations);
 };
 
 #endif // GOOGLESOLVER_H

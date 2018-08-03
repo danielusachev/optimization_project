@@ -3,6 +3,7 @@
 MixedIntegerLinearProgram::MixedIntegerLinearProgram() : validFlag(false),
                                                          integerFlag(false),
                                                          unsavedChangesFlag(false) {
+    iterations = 1;
 }
 
 bool MixedIntegerLinearProgram::isValid() {
@@ -24,6 +25,9 @@ size_t MixedIntegerLinearProgram::solutions_number() {
 Solution MixedIntegerLinearProgram::get_solution(size_t index) {
     return solutions[index];
 }
+int64_t MixedIntegerLinearProgram::get_time() {
+    return get_solution(solutions_number() - 1).time;
+}
 
 NEOS_Query MixedIntegerLinearProgram::get_last_query() {
     return last_query;
@@ -35,14 +39,13 @@ ValueType MixedIntegerLinearProgram::solve(const QString& solver,
     sol.solver = solver;
     sol.params = params;
     sol.value = 0.0;
-    if (solver == "Google") {
-        googlesolver s;
-        int n = objective.size();
-        sol.vector.resize(n);
-        sol.value =  s.Solve(matrix, constraints, objective, n, sol.vector);
-        solutions.push_back(sol);
-        unsavedChangesFlag = true;
-    }
+    googlesolver s;
+    int n = objective.size();
+    sol.vector.resize(n);
+    sol.value =  s.Solve(matrix, constraints, objective, integer, n, sol.vector,
+                         solver.toStdString(), isInteger(), sol.time, iterations);
+    solutions.push_back(sol);
+    unsavedChangesFlag = true;
     return sol.value;
 }
 
@@ -283,4 +286,8 @@ void MixedIntegerLinearProgram::save(const QString& file) {
     fout.close();
 
     unsavedChangesFlag = false;
+}
+
+void MixedIntegerLinearProgram::SetIterations(int i) {
+    iterations = i;
 }
